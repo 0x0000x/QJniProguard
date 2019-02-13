@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11 -frtti -fexceptions"
+
+                /**
+                 * Support for ARM5 (armeabi), MIPS, and MIPS64 are deprecated.
+                 * They will no longer build by default with ndk-build,
+                 * but are still buildable if they are explicitly named,
+                 * and will be included by "all", "all32", and "all64".
+                 * Support for each of these has been removed in r17.
+                 * Both CMake and ndk-build will issue a warning if you target any of these ABIs.
+                 */
+                abiFilters "armeabi", "armeabi-v7a", "x86"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
